@@ -1,0 +1,13 @@
+# _BASE_: "../../../Base-RCNN-C4-OWOD.yaml"
+_BASE_: "../OWOD-FPN.yaml"
+MODEL:
+  WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
+DATASETS:
+  TRAIN: ('t1_voc_coco_2007_train', )
+  TEST: ('voc_coco_2007_test_1',)  
+
+OUTPUT_DIR: "./repeat/t1"
+OWOD:
+  PREV_INTRODUCED_CLS: 0
+  CUR_INTRODUCED_CLS: 20
+  USE_OBJECTNESS_LOSS: True
