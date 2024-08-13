@@ -172,10 +172,10 @@ def load_voc_coco_instances(dataset_root: str, file_name: str, class_names: Unio
         if 'train' in file_name:
             instances = remove_unseen(instances, cur_seen) 
             instances = remove_previous(instances, prev_num)
-            instances = load_one_sam_data(instances, '/home/xx/F:sam/area_clear_h_ori/', fileid, tr_sz=25)
+            instances = load_one_sam_data(instances, os.path.join(dataset_root, 'SAM'), fileid, tr_sz=25)
         if 'ft' in file_name:
             instances = remove_unseen(instances, cur_seen)
-            instances = load_one_sam_data(instances, '/home/xx/F:sam/area_clear_h_ori/', fileid, tr_sz=25)
+            instances = load_one_sam_data(instances, os.path.join(dataset_root, 'SAM'), fileid, tr_sz=25)
         if 'test' in file_name:
             instances = rename_unseen_to_unknown(instances, cur_seen)
         r["annotations"] = instances

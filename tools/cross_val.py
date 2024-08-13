@@ -1,4 +1,3 @@
-# 实现交叉训练，可视化验证集指标
 from detectron2.engine.train_loop import HookBase
 from detectron2.evaluation import inference_on_dataset, print_csv_format
 import detectron2.utils.comm as comm
@@ -9,16 +8,16 @@ class ValidationMap(HookBase):
     def __init__(self, cfg):
         super().__init__()
         self.cfg = cfg.clone()
-        self.cfg.defrost()                  # enable it to can be changed.
-        self.map_interval = 1000            # 计算指标
-        self.cross_interval = 50            # 每100个步骤验证一次
-        self.enable_loss_val = False        # 是否计算验证集损失
-        self.start_iter = cfg.EVAL.start_iter  # 开始验证的步骤
+        self.cfg.defrost()                  
+        self.map_interval = 1000            
+        self.cross_interval = 50           
+        self.enable_loss_val = False        
+        self.start_iter = cfg.EVAL.start_iter 
         
         self.eval_data_loader = None
         self.loss_data_loader = None
         self.evaluator = None
-        self.max_metric = {                 # 每个max指标都保存一个模型
+        self.max_metric = {                 
             'AP': 0, 
             'AP50': 0, 
             'Unknown Recall50': 0, 
@@ -27,7 +26,7 @@ class ValidationMap(HookBase):
             'm_cls_recall': 0,
             'm_cls_precision': 0,
         }
-    # 注册到这个钩子
+ 
     def after_step(self):
         if self.enable_loss_val and self.trainer.iter % self.cross_interval == 0 and self.trainer.iter >= self.cross_interval:
             self.get_val_loss()
@@ -36,14 +35,14 @@ class ValidationMap(HookBase):
             self.trainer.model.eval()
             self.eval_dataset()
             self.trainer.model.train()
-    # 得到验证损失
+
     def get_val_loss(self):
         if self.loss_data_loader is None:
             cfg = self.cfg.clone()
             cfg.DATASETS.TRAIN = self.cfg.DATASETS.TEST
             self.loss_data_loader = iter(self.trainer.build_train_loader(cfg))
             
-        # 计算验证集的损失
+
         with torch.no_grad():
             data = next(self.loss_data_loader)
             loss_dict = self.trainer.model(data)
@@ -51,7 +50,7 @@ class ValidationMap(HookBase):
             self.trainer.storage.put_scalars(**dict(loss_dict))
             self.trainer.storage.put_scalar("val_total_loss", sum(loss for loss in loss_dict.values()))
             
-    # 给每一个key加上前缀
+
     def add_prefix_to_keys(self, dictionary, prefix):
         new_dict = {}
         for key, value in dictionary.items():
@@ -59,7 +58,6 @@ class ValidationMap(HookBase):
             new_dict[new_key] = value
         return new_dict
     
-    # 在数据集上验证
     def eval_dataset(self):
         if self.eval_data_loader is None:
             self.eval_data_loader = self.trainer.build_test_loader(self.cfg, self.cfg.DATASETS.TEST[0])
@@ -71,7 +69,6 @@ class ValidationMap(HookBase):
         self.save_model(result)
         self.log_result(result)
         
-    # 保存最好指标的模型
     def save_model(self, result):
         """
             result: [{
@@ -96,7 +93,6 @@ class ValidationMap(HookBase):
                 self.max_metric[metric_key] = metric_val
                 self.trainer.checkpointer.save(f'bast_{metric_key}_{metric_val}', iteration=self.trainer.iter+1)
                 
-    # 记录结果
     def log_result(self, result):
         """
             result: {

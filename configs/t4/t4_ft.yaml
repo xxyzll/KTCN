@@ -3,7 +3,8 @@ SOLVER:
   IMS_PER_BATCH: 8
   BASE_LR: 0.0005
   STEPS: []
-  MAX_ITER: 10000
+  MAX_ITER: 20000
+  WARMUP_ITERS: 500
 DATASETS:
   TRAIN: ('t4_voc_coco_2007_ft',)
   TEST: ("voc_coco_2007_test_4",)
@@ -11,3 +12,5 @@ OUTPUT_DIR: "repeat/t4/ft"
 OWOD:
   PREV_INTRODUCED_CLS: 60
   CUR_INTRODUCED_CLS: 20
+EVAL:
+  start_iter: 1000

@@ -3,7 +3,7 @@ DATASETS:
   TRAIN: ('t2_voc_coco_2007_train', ) 
   TEST: ('voc_coco_2007_test_2', )
 SOLVER:
-  BASE_LR: 0.0005
+  BASE_LR: 0.002
   STEPS: ()
   MAX_ITER: 80000
   WARMUP_ITERS: 500
@@ -11,3 +11,4 @@ OUTPUT_DIR: "repeat/t2"
 OWOD:
   PREV_INTRODUCED_CLS: 20
   CUR_INTRODUCED_CLS: 20
+  

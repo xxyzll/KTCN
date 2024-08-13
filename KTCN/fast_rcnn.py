@@ -134,10 +134,11 @@ def fast_rcnn_inference_single_image(
     logits = logits[filter_inds[:,0]]
 
     # 2. Apply NMS for each class independently.
-    keep = batched_nms(boxes, scores, filter_inds[:, 1], nms_thresh)
+    keep = batched_nms(boxes, scores, filter_inds[:, 1], nms_thresh)   
     if topk_per_image >= 0:
         keep = keep[:topk_per_image]
     boxes, scores, filter_inds = boxes[keep], scores[keep], filter_inds[keep]
+
     logits = logits[keep]
     result = Instances(image_shape) 
     result.pred_boxes = Boxes(boxes)

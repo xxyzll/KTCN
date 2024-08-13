@@ -12,3 +12,5 @@ OUTPUT_DIR: "repeat/t2/ft"
 OWOD:
   PREV_INTRODUCED_CLS: 20
   CUR_INTRODUCED_CLS: 20
+EVAL:
+  start_iter: 1000
